@@ -1,77 +1,144 @@
 <template>
-  <div id="my-three"></div>
+  <div id="container"></div>
 </template>
 ​
 <script lang='ts' setup>
   import * as THREE from 'three'
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+  // import { Stats } from 'three/examples/jsm/libs/stats.module'
   import { onMounted  } from 'vue'
 
-  //创建一个三维场景
-  const scene = new THREE.Scene();
-  //创建一个物体（形状）
-  const geometry = new THREE.BoxGeometry(100, 100, 100);//长宽高都是100的立方体
-  // const geometry = new THREE.SphereGeometry(60,40,40);//半径是60的圆
-  //widthSegments, heightSegments：水平方向和垂直方向上分段数。widthSegments最小值为3，默认值为8。heightSegments最小值为2，默认值为6。
-  //创建材质（外观）
-  const material = new THREE.MeshLambertMaterial({
-      // color: 0x0000ff,//设置材质颜色(蓝色)
-      color: 0x00ff00,//(绿色)
-      transparent: true,//开启透明度
-      opacity: 0.5 //设置透明度
-  });
-  //创建一个网格模型对象
-  const mesh = new THREE.Mesh(geometry, material);//网络模型对象Mesh
-  //把网格模型添加到三维场景
-  scene.add(mesh);//网络模型添加到场景中
+  var scene:any;
+  var renderer:any;
+  var camera:any;
+  var dom:any;
+  var orbitControl:any;
+  const objects = [];//场景中所有对象的集合
+  var stats:any;
 
-  // 添加多个模型（添加圆形）
-  // const  geometry2 = new THREE.SphereGeometry(60, 40, 40);
-  // const  material2 = new THREE.MeshLambertMaterial({
-  //     color: 0xffff00
-  // });
-  // const mesh2 = new THREE.Mesh(geometry2, material2); //网格模型对象Mesh
-  // // mesh3.translateX(120); //球体网格模型沿Y轴正方向平移120
-  // mesh2.position.set(120,0,0);//设置mesh3模型对象的xyz坐标为120,0,0
-  // scene.add(mesh2);
+  const start = () => {
+      initMain();
+      animate();
+  }
 
-  //添加光源 //会照亮场景里的全部物体（氛围灯），前提是物体是可以接受灯光的，这种灯是无方向的，即不会有阴影。
-  const ambient = new THREE.AmbientLight(0xffffff, 0.4);
-  const light = new THREE.PointLight(0xffffff, 1);//点光源，color:灯光颜色，intensity:光照强度
+  const initMain = () => {
+      initScene();
+      initCamera();
+      initRenderer();
+      initBackground();
+      initOrbitControl();
+      initLight();
+      initStats();
+      initFloor();
+  }
 
-  scene.add(ambient);
-  light.position.set(200,300,400);
-  scene.add(light);
+  const animate = () => {
+    requestAnimationFrame(animate)
+    renderer.render(scene, camera);
+  }
 
-  //创建一个透视相机，窗口宽度，窗口高度
-  const width = window.innerWidth, height = window.innerHeight;
-  const camera = new THREE.PerspectiveCamera(45, width/height, 1, 1000);
-  //设置相机位置
-  camera.position.set(300,300,300);
-  //设置相机方向
-  camera.lookAt(0,0,0);
+  const initScene = () => {
+    scene = new THREE.Scene();
+  }
 
-  //创建辅助坐标轴
-  const axesHelper = new THREE.AxesHelper(200);//参数200标示坐标系大小，可以根据场景大小去设置
-  scene.add(axesHelper);
+  const initCamera = () => {
+    if (!camera) {
+				camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 50000);
+				camera.position.set( -350, 600, 1100 );
+				camera.lookAt( scene.position );
+				//将相机放到场景中
+				scene.add(camera);
+			} else {
+				camera.position.set( -350, 600, 1100 );
+				camera.lookAt( scene.position );
+			}
+  }
 
-  //创建一个WebGL渲染器
-  const renderer = new THREE.WebGLRenderer()
-  renderer.setSize(width,height)//设置渲染区尺寸
-  renderer.render(scene,camera)//执行渲染操作、指定场景、相机作为参数
+  const initRenderer = () => {
+      renderer = new THREE.WebGLRenderer({
+				antialias: true,
+				logarithmicDepthBuffer: true
+			});
+			// this.renderer.toneMapping = THREE.CineonToneMapping;	// 色调
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			renderer.setPixelRatio( window.devicePixelRatio );
+			// this.renderer.shadowMap.enabled = true;	// 是否开启阴影
+			renderer.shadowMap.type = THREE.BasicShadowMap;
+			dom = document.getElementById("container");
+			dom.appendChild(renderer.domElement);
+  }
 
-  const controls = new OrbitControls(camera, renderer.domElement)//创建控件对象
-  controls.addEventListener('change',()=>{
-      renderer.render(scene, camera)//监听鼠标，键盘事件
-  })
+  const initOrbitControl = () => {
+      orbitControl = new OrbitControls(camera, renderer.domElement);
+			orbitControl.enableDamping = true;
+			orbitControl.dampingFactor = 0.5;
+			// 视角最小距离
+			orbitControl.minDistance = 0;
+			// 视角最远距离
+			orbitControl.maxDistance = 10000;
+			// 最大角度
+			//this.orbitControl.maxPolarAngle = Math.PI / 2.2;
+  }
+
+  const initBackground = () => {
+    scene.background = new THREE.Color( 0x333333 );
+  }
+
+  const initLight = () => {
+    //首先添加个环境光
+			let ambient = new THREE.AmbientLight(0xffffff, 1); //AmbientLight,影响整个场景的光源
+			ambient.position.set(0, 0, 0);
+			addObject(ambient);
+
+			// 阴影聚光灯
+			let pointLight = new THREE.SpotLight(0xFFFAFA,1);
+			pointLight.position.set(0, 1500, 2500);
+			// pointLight.castShadow = true; 	// 是否开启阴影
+			pointLight.shadow.camera.near = 2000;
+			pointLight.shadow.camera.far = 10000;
+			pointLight.shadow.mapSize.height = 200000;
+			pointLight.shadow.mapSize.width = 200000;
+			addObject(pointLight);
+  }
+
+  const initStats = () => {
+			// stats = new Stats();
+			// dom.appendChild( stats.dom );
+			// stats.domElement.style.display = 'none';
+  }
+
+  const initFloor = () => {
+    const helper = new THREE.GridHelper( 8000, 300);
+    helper.position.x = 1200;
+    helper.position.y = - 1;
+    helper.position.z = -2000;
+    helper.material.opacity = 0.25;
+    helper.material.transparent = true;
+    addObject( helper );
+  }
+    
+
+  const addObject = (object:any) => {
+    scene.add(object);
+    objects.push(object);
+  }
+
+
+  
   onMounted(()=>{
-      document.getElementById('my-three')?.appendChild(renderer.domElement)
+    start();
   })
 </script>
 ​
 <style>
-  body{
-      margin: 0;
-      padding: 0;
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  html {
+      height: 100%;
+  }
+  body {
+      height: 100%;
   }
 </style>
