@@ -4,6 +4,12 @@
 
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
+import { useTestStore } from './store/index'
+
+const testStore = useTestStore();
+
+console.log(testStore.baseUrl)
+
 </script>
 
 <style scoped>
