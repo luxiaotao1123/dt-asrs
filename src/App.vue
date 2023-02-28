@@ -8,7 +8,15 @@ import { useTestStore } from './store/index'
 
 const testStore = useTestStore();
 
-console.log(testStore.baseUrl)
+// 同步修改
+testStore.modifyUrl('http://localhost:8080');
+console.log("sync: " + testStore.baseUrl);
+// 异步修改
+console.log(testStore.getUserInfo());
+setTimeout(()=> {
+  console.log("async: " + testStore.baseUrl);
+}, 2500)
+
 
 </script>
 
