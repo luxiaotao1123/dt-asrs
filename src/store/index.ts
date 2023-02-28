@@ -9,7 +9,12 @@ export const useTestStore = defineStore(Names.TEST, {
     },
     // 相当于 computed, 修饰一些值
     getters: {
-
+        newBaseUrl():string {
+            return this.baseUrl + "/new"
+        },
+        otherVal():string {
+            return `${this.newBaseUrl}/other`
+        }
     },
     // 相当于 method，可以做同步、异步都可以做，提交 state
     actions: {
@@ -35,7 +40,7 @@ const login = ():Promise<User> => {
                 name: "vincent",
                 age: 29
             })
-        }, 2000);
+        }, 1000);
     })
 }
 

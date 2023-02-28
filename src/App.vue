@@ -15,8 +15,10 @@ console.log("sync: " + testStore.baseUrl);
 console.log(testStore.getUserInfo());
 setTimeout(()=> {
   console.log("async: " + testStore.baseUrl);
-}, 2500)
-
+}, 1500)
+// getter值
+console.log("newBaseUrl: " + testStore.newBaseUrl);
+console.log("otherVal: " + testStore.otherVal);
 
 </script>
 
