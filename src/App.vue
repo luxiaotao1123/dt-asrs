@@ -1,8 +1,8 @@
 <template>
   <HelloWorld></HelloWorld>
   <div style="text-align: center; height: 100px;">
-    <router-link to="/login"
-      style="height: 100px; width: 100px; display: inline-block; background-color: rosybrown;"></router-link>
+    <router-link to="/login" style="height: 100px; width: 100px; display: inline-block; background-color: rosybrown;"></router-link>
+    <router-link :to="{name: 'reg'}" style="height: 100px; width: 100px; display: inline-block; background-color: rebeccapurple;"></router-link>
   </div>
   <router-view></router-view>
 </template>
