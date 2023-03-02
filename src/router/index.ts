@@ -1,3 +1,4 @@
+import { nextTick } from 'vue'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 const routes:Array<RouteRecordRaw> = [
@@ -16,6 +17,16 @@ const routes:Array<RouteRecordRaw> = [
 const router = createRouter({
     history: createWebHistory(),
     routes
+})
+
+// 全局前置路由守卫
+const whiteList = ['/', '/login']
+router.beforeEach((to, from, next) => {
+    if(whiteList.includes(to.path) || localStorage.getItem('token')) {
+        next();
+    } else {
+        next('/');
+    }
 })
 
 export default router;
