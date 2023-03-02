@@ -52,7 +52,7 @@ onMounted(() => {
 
 // http请求
 const getCrnData = async () => {
-  return await axios.get("http://47.97.1.152:58080/jkwcs/three/query/crn/cache/v1", {params : {}})
+  return await axios.get("http://47.97.1.152:58080/jkwcs/three/query/crn/cache/v1", { params: {} })
 }
 </script>
 
