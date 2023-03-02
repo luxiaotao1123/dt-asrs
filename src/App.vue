@@ -16,6 +16,7 @@ import { ref, onMounted } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 import { useTestStore } from './store/index'
 import { useRouter } from 'vue-router';
+import axios from 'axios'
 
 const testStore = useTestStore();
 
@@ -44,7 +45,15 @@ const cool = ref<any>();
 onMounted(() => {
   let dom = cool.value as HTMLElement;
   console.log(dom);
+  setTimeout(() => {
+    getCrnData().then(result => console.log(result.data))
+  })
 })
+
+// http请求
+const getCrnData = async () => {
+  return await axios.get("http://47.97.1.152:58080/jkwcs/three/query/crn/cache/v1", {params : {}})
+}
 </script>
 
 <style scoped>
