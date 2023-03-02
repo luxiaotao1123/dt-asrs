@@ -15,10 +15,26 @@ const routes:Array<RouteRecordRaw> = [
 
 const router = createRouter({
     history: createWebHistory(),
+    scrollBehavior: (to, from, savePosition) => {
+        if (savePosition) {
+            return savePosition;
+        } else {
+            return {
+                top: 0
+            }
+        }
+        // return new Promise((r) => {
+        //     setTimeout(() => {
+        //         r({
+        //             top: 0
+        //         })
+        //     }, 1000)
+        // })
+    },
     routes
 })
 
-// 全局前置路由守卫
+// 前置路由守卫
 const whiteList = ['/', '/login']
 router.beforeEach((to, from, next) => {
     if(whiteList.includes(to.path) || localStorage.getItem('token')) {
@@ -26,6 +42,11 @@ router.beforeEach((to, from, next) => {
     } else {
         next('/');
     }
+})
+
+// 后置路由守卫
+router.afterEach((to, from) => {
+
 })
 
 export default router;
