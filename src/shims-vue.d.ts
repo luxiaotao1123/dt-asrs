@@ -6,3 +6,4 @@ declare module '*.vue' {
 declare module 'three'
 declare module 'three/examples/jsm/controls/OrbitControls'
 declare module 'three/examples/jsm/libs/stats.module'
+declare module 'three/examples/jsm/loaders/OBJLoader'
