@@ -29,6 +29,7 @@ class Player {
         this.initOrbitControl();
         this.initLight();
         this.initStats();
+        this.initResize(this);
         this.initFloor();
     }
 
@@ -105,6 +106,14 @@ class Player {
         // stats = new Stats();
         // dom.appendChild( stats.dom );
         // stats.domElement.style.display = 'none';
+    }
+
+    initResize = (object) => {
+        window.addEventListener('resize', function () {
+            object.camera.aspect = window.innerWidth / window.innerHeight;
+            object.camera.updateProjectionMatrix();
+            object.renderer.setSize(window.innerWidth, window.innerHeight);
+        }, false);
     }
 
     initFloor = () => {
