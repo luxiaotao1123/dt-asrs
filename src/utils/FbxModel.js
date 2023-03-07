@@ -11,7 +11,7 @@ class FbxModel {
         that.object = object;
         that.mixer;
         const loader = new FBXLoader();
-        loader.load('model/Samba Dancing.fbx', function (object) {
+        loader.load('model/Standing Dodge Backward.fbx', function (object) {
 
             that.mixer = new THREE.AnimationMixer(object);
 
