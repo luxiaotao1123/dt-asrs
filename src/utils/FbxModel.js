@@ -3,6 +3,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
 
 class FbxModel {
 
+    actions = [];
     object;
     mixer;
 
@@ -11,28 +12,24 @@ class FbxModel {
         that.object = object;
         that.mixer;
         const loader = new FBXLoader();
-        loader.load('model/Breakdance Uprock Var 2.fbx', function (object) {
+        loader.load('model/Breakdance Uprock Var 2.fbx', function (mesh) {
+            that.mixer = new THREE.AnimationMixer(mesh);
 
-            that.mixer = new THREE.AnimationMixer(object);
+            for (let i = 0; i < mesh.animations.length; i++) {
+                that.actions[i] = that.mixer.clipAction(mesh.animations[i]);
+            }
 
-            const action = that.mixer.clipAction(object.animations[0]);
-            action.play();
-
-            object.traverse(function (child) {
-
+            mesh.traverse(function (child) {
                 if (child.isMesh) {
-
                     child.castShadow = true;
                     child.receiveShadow = true;
                     // child.material = new THREE.MeshLambertMaterial({
                     //     color: 0xCD6839
                     // });
                 }
-
             });
 
-            that.object.addObject(object);
-
+            that.object.addObject(mesh);
         });
 
     }

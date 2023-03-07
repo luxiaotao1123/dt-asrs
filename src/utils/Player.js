@@ -145,6 +145,10 @@ class Player {
         setTimeout(() => {
             this.fbxModelMixer = model.mixer;
         }, 1000)
+
+        setTimeout(() => {
+            model.actions[0].play();
+        }, 3000)
     }
 
 }
