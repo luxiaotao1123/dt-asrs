@@ -11,7 +11,7 @@ class FbxModel {
         that.object = object;
         that.mixer;
         const loader = new FBXLoader();
-        loader.load('model/Standing Dodge Backward.fbx', function (object) {
+        loader.load('model/Breakdance Uprock Var 2.fbx', function (object) {
 
             that.mixer = new THREE.AnimationMixer(object);
 
@@ -35,11 +35,7 @@ class FbxModel {
 
         });
 
-
     }
-
-
-
 }
 
 export default FbxModel
