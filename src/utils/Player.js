@@ -31,6 +31,7 @@ class Player {
         this.initStats();
         this.initResize(this);
         this.initFloor();
+        this.defineGeometry();
     }
 
     animate = () => {
@@ -129,6 +130,11 @@ class Player {
     addObject = (object) => {
         this.scene.add(object);
         this.objects.push(object);
+    }
+
+    defineGeometry = () => {
+        const planeGeometry = new THREE.planeGeometry(1000, 1000);
+        const planeMaterial = new THREE.MeshBasicMaterial()
     }
 
 }
