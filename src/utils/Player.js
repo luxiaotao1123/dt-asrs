@@ -6,7 +6,6 @@ class Player {
 
     constructor(selector) {
         this.container = document.querySelector(selector);
-        this.container;
         this.scene;
         this.renderer;
         this.camera;
