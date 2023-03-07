@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
+import FbxModel from './FbxModel'
 
 class Player {
 
@@ -12,6 +13,9 @@ class Player {
         this.dom;
         this.orbitControl;
         this.objects = [];//场景中所有对象的集合
+
+        this.clock = new THREE.Clock();
+		this.fbxModelMixer = null;
     }
 
     // 启动函数
@@ -36,6 +40,11 @@ class Player {
     animate = () => {
         requestAnimationFrame(this.animate)
         this.renderer.render(this.scene, this.camera);
+
+        if (this.fbxModelMixer && this.clock) {
+            const delta = this.clock.getDelta();
+            this.fbxModelMixer.update(delta);
+        }
     }
 
     initScene = () => {
@@ -118,9 +127,9 @@ class Player {
 
     initFloor = () => {
         const helper = new THREE.GridHelper(8000, 300);
-        helper.position.x = 1200;
-        helper.position.y = - 1;
-        helper.position.z = -2000;
+        // helper.position.x = 1200;
+        // helper.position.y = - 1;
+        // helper.position.z = -2000;
         helper.material.opacity = 0.25;
         helper.material.transparent = true;
         this.addObject(helper);
@@ -132,8 +141,10 @@ class Player {
     }
 
     defineGeometry = () => {
-        // const planeGeometry = new THREE.planeGeometry(1000, 1000);
-        // const planeMaterial = new THREE.MeshBasicMaterial()
+        const model = new FbxModel(this);
+        setTimeout(() => {
+            this.fbxModelMixer = model.mixer;
+        }, 1000)
     }
 
 }
