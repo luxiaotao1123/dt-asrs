@@ -133,8 +133,8 @@ class Player {
     }
 
     defineGeometry = () => {
-        const planeGeometry = new THREE.planeGeometry(1000, 1000);
-        const planeMaterial = new THREE.MeshBasicMaterial()
+        // const planeGeometry = new THREE.planeGeometry(1000, 1000);
+        // const planeMaterial = new THREE.MeshBasicMaterial()
     }
 
 }
